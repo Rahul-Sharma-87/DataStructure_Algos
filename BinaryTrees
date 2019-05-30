@@ -1,0 +1,116 @@
+using System;
+
+namespace IntPrac {
+    public class BTNode {
+        public BTNode(int data) {
+            Data = data;
+        }
+        public int Data { get; set; }
+        public BTNode Left { get; set; }
+        public BTNode Right{ get; set; }
+    }
+    public static class  BinaryTree {
+
+        internal static void Caller() {
+            BTNode root = new BTNode(1);
+            root.Left = new BTNode(2);
+            root.Left.Left = new BTNode(4);
+            root.Left.Right = new BTNode(5);
+            root.Left.Right.Left = new BTNode(8);
+            root.Left.Right.Right = new BTNode(9);
+            root.Right = new BTNode(3);
+            root.Right.Left = new BTNode(6);
+            root.Right.Right = new BTNode(7);
+            var maxValue = FindMaxElementInTree(root);
+            var minElement = FindMinimumElementInBST(root);
+            var maxElement = FindMaxElementInBST(root);
+            var height = FindHeightOfBT(root);
+            var test = FindSizeOfBT(root);
+
+            BTNode rootBst = new BTNode(5);
+            rootBst.Left = new BTNode(2);
+            rootBst.Right = new BTNode(21);
+            rootBst.Left.Left = new BTNode(-4);
+            rootBst.Left.Right = new BTNode(3);
+            rootBst.Right.Left = new BTNode(19);
+            rootBst.Right.Right = new BTNode(25);
+            var isBST = FindBTisBST(rootBst);
+            //Wrong BST
+            rootBst.Right.Right = new BTNode(18);
+            isBST = FindBTisBST(rootBst);
+        }
+
+        internal static int  FindHeightOfBT(BTNode root) {
+            //Step 1: Max(left,right) + 1
+            //Step 2: Node is null on Left or Right return -1
+            //O(n) - as each node is visited once
+
+            if (root==null) {
+                return -1;
+            }
+            return Math.Max(FindHeightOfBT(root.Left), FindHeightOfBT(root.Right)) + 1;
+        }
+
+        private static int FindMinimumElementInBST(BTNode root) {
+            if (root.Left == null) {
+                return root.Data;
+            }
+            return FindMinimumElementInBST(root.Left);
+        }
+
+        private static int FindMaxElementInBST(BTNode root) {
+            if (root.Right == null) {
+                return root.Data;
+            }
+            return FindMaxElementInBST(root.Right);
+        }
+
+        //Considering largest lives at the end
+        private static int FindMaxElementInTree(BTNode root) {
+            if (root == null) {
+                return 0;
+            }
+
+            if (root.Left == null && root.Right == null) {
+                return root.Data;
+            }
+            return Math.Max(
+                FindMaxElementInTree(root.Left), 
+                FindMaxElementInTree(root.Right)
+                );
+        }
+
+        internal static int  FindSizeOfBT(BTNode root) {
+            //Step 1: Max(left,right) + 1
+            //Last empty node return -1
+            if (root == null) {
+                return 0;
+            } else {
+                return (FindSizeOfBT(root.Left) + FindSizeOfBT(root.Right) + 1);
+            }
+        }
+
+        internal static bool FindBTisBST(BTNode root) {
+            if (root == null) {
+                return true;
+            }
+
+            if (root.Left != null && root.Left.Data > root.Data) {
+                return false;
+            }
+
+            if (root.Right != null && root.Data > root.Right.Data) {
+                return false;
+            }
+
+            if (
+                root.Left != null &&
+                root.Right != null &&
+                root.Left.Data > root.Right.Data) {
+                return false;
+            }
+            return FindBTisBST(root.Left) && FindBTisBST(root.Right);
+        }
+
+    }
+}
